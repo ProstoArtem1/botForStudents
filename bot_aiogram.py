@@ -1,7 +1,0 @@
-
-
-
-
-
-TOKEN = '8796680707:AAEmen9JLcRetgO-k0UaM-NExe3dpFs0bCg'
-

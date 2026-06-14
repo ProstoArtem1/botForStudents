@@ -1,8 +1,13 @@
+import os
 import telebot
 import sqlite3
 from telebot import types
+from dotenv import load_dotenv
 
-bot = telebot.TeleBot('8634395770:AAFowdr6d9Gq487AW9-tyYQtjzSkt9oY4u0')
+load_dotenv()
+
+TOKEN = os.getenv('BOT_TOKEN')
+bot = telebot.TeleBot(TOKEN)
 name = None
 
 @bot.message_handler(commands=['start'])

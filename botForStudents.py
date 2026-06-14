@@ -1,8 +1,13 @@
+import os
 import telebot
 from telebot import types
 from datetime import datetime
 
-TOKEN = "8568772470:AAGQb7ytbx2L7wEoythd_dkzY4DPXlgGUIs"
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
 days_map = {

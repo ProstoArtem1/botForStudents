@@ -1,7 +1,12 @@
+import os
 import telebot
 import requests
 
-TOKEN = '8634395770:AAFowdr6d9Gq487AW9-tyYQtjzSkt9oY4u0'
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(TOKEN)
 API_KEY = 'd5ea6e183473f6fbbc6bc8c0e19254b0'
 
