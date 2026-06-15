@@ -22,10 +22,9 @@ def start(message):
 def get_weather(message):
     city = message.text.strip()
     
-    # 1. Заворачиваем сетевой запрос в try/except на случай обрыва интернета
     try:
         url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=ru'
-        res = requests.get(url, timeout=5) # Добавили таймаут, чтобы бот не зависал вечно
+        res = requests.get(url, timeout=5)
     except requests.exceptions.RequestException:
         bot.reply_to(message, "⚠️ Ошибка подключения к серверу погоды. Попробуйте позже.")
         return
@@ -33,18 +32,15 @@ def get_weather(message):
     if res.status_code == 200:
         data = res.json() 
         
-        # Вытаскиваем расширенные данные (клиенты любят подробности)
         temp = data["main"]["temp"]
         feels_like = data["main"]["feels_like"]
         humidity = data["main"]["humidity"]
         wind_speed = data["wind"]["speed"]
         weather_desc = data["weather"][0]["description"]
         
-        # Получаем иконку погоды от самого сервиса OpenWeather
         icon_code = data["weather"][0]["icon"]
         icon_url = f"https://openweathermap.org{icon_code}@2x.png"
 
-        # Формируем красивый текст с эмодзи
         weather_report = (
             f"🏙️ **Погода в городе {city.title()}:**\n\n"
             f"🌡️ Температура: *{round(temp, 1)}°C*\n"
@@ -54,11 +50,9 @@ def get_weather(message):
             f"💨 Ветер: *{wind_speed} м/с*"
         )
 
-        # Отправляем красивую карточку: иконка погоды + наш текст
         try:
             bot.send_photo(message.chat.id, icon_url, caption=weather_report, parse_mode='Markdown')
         except Exception:
-            # Если ссылка на фото не сработала, просто отправляем текст
             bot.send_message(message.chat.id, weather_report, parse_mode='Markdown')
             
     elif res.status_code == 404:
