@@ -23,20 +23,20 @@ def process_sum(message):
     try:
         amount = float(message.text.strip().replace(',', '.')) 
     except ValueError:
-        bot.send_message(message.chat.id, '⚠️ Ошибка! Пожалуйста, введите число (сумму):')
+        bot.send_message(message.chat.id, ' Ошибка! Пожалуйста, введите число (сумму):')
         bot.register_next_step_handler(message, process_sum)
         return
 
     if amount <= 0:
-        bot.send_message(message.chat.id, '❌ Число должно быть больше нуля. Попробуйте ещё раз:')
+        bot.send_message(message.chat.id, ' Число должно быть больше нуля. Попробуйте ещё раз:')
         bot.register_next_step_handler(message, process_sum)
         return
 
     markup = types.InlineKeyboardMarkup(row_width=2)
-    btn1 = types.InlineKeyboardButton('USD ➡️ EUR', callback_data=f'convert:USD/EUR:{amount}')
-    btn2 = types.InlineKeyboardButton('EUR ➡️ USD', callback_data=f'convert:EUR/USD:{amount}')
-    btn3 = types.InlineKeyboardButton('USD ➡️ GBP', callback_data=f'convert:USD/GBP:{amount}')
-    btn4 = types.InlineKeyboardButton('⚙️ Другая валюта', callback_data=f'else:{amount}')
+    btn1 = types.InlineKeyboardButton('USD / EUR', callback_data=f'convert:USD/EUR:{amount}')
+    btn2 = types.InlineKeyboardButton('EUR / USD', callback_data=f'convert:EUR/USD:{amount}')
+    btn3 = types.InlineKeyboardButton('USD / GBP', callback_data=f'convert:USD/GBP:{amount}')
+    btn4 = types.InlineKeyboardButton(' Другая валюта', callback_data=f'else:{amount}')
     markup.add(btn1, btn2, btn3, btn4)
 
     bot.send_message(message.chat.id, f' Вы выбрали сумму: *{amount}*.\nВыберите пару валют:', reply_markup=markup, parse_mode='Markdown')
@@ -58,17 +58,17 @@ def handle_callback(call):
             res = currency.convert(amount, from_val, to_val)
             bot.send_message(
                 call.message.chat.id, 
-                f'✅ **Результат:** {amount} {from_val} = *{round(res, 2)}* {to_val}\n\n✍️ Если хотите конвертировать снова, просто введите новую сумму:'
+                f' **Результат:** {amount} {from_val} = *{round(res, 2)}* {to_val}\n\n Если хотите конвертировать снова, просто введите новую сумму:'
             )
             bot.register_next_step_handler(call.message, process_sum)
         except Exception:
-            bot.send_message(call.message.chat.id, '❌ Произошла ошибка при конвертации. Введите сумму заново:')
+            bot.send_message(call.message.chat.id, ' Произошла ошибка при конвертации. Введите сумму заново:')
             bot.register_next_step_handler(call.message, process_sum)
             
     elif action == 'else':
         bot.send_message(
             call.message.chat.id, 
-            '📝 Введите код валют через косую черту.\nПример: `USD/UAH` или `EUR/PLN`:', 
+            ' Введите код валют через косую черту.\nПример: `USD/UAH` или `EUR/PLN`:', 
             parse_mode='Markdown'
         )
         bot.register_next_step_handler(call.message, process_custom_currency, amount)
@@ -79,11 +79,11 @@ def process_custom_currency(message, amount):
         res = currency.convert(amount, values[0], values[1])
         bot.send_message(
             message.chat.id, 
-            f'✅ **Результат:** {amount} {values[0]} = *{round(res, 2)}* {values[1]}\n\n Введите новую сумму для следующего расчёта:'
+            f' **Результат:** {amount} {values[0]} = *{round(res, 2)}* {values[1]}\n\n Введите новую сумму для следующего расчёта:'
         )
         bot.register_next_step_handler(message, process_sum)
     except Exception:
-        bot.send_message(message.chat.id, '⚠️ Неверный формат или валюта не поддерживается. Попробуйте ввести сумму заново:')
+        bot.send_message(message.chat.id, ' Неверный формат или валюта не поддерживается. Попробуйте ввести сумму заново:')
         bot.register_next_step_handler(message, process_sum)
 
 if __name__ == '__main__':
