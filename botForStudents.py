@@ -37,14 +37,14 @@ user_states = {}
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    btn1 = types.KeyboardButton("🔼 Чисельник")
-    btn2 = types.KeyboardButton("🔽 Знаменник")
+    btn1 = types.KeyboardButton(" Чисельник")
+    btn2 = types.KeyboardButton(" Знаменник")
     markup.add(btn1, btn2)
     bot.send_message(message.chat.id, "Привіт! Який зараз тиждень?", reply_markup=markup)
 
-@bot.message_handler(func=lambda message: message.text in ["🔼 Чисельник", "🔽 Знаменник"])
+@bot.message_handler(func=lambda message: message.text in [" Чисельник", " Знаменник"])
 def select_week(message):
-    clean_week = message.text.replace("🔼 ", "").replace("🔽 ", "")
+    clean_week = message.text.replace(" ", "").replace(" ", "")
     user_states[message.chat.id] = clean_week
     
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -55,11 +55,11 @@ def select_week(message):
         types.KeyboardButton("Середа"), types.KeyboardButton("Четвер"),
         types.KeyboardButton("П'ятниця")
     )
-    markup.add(types.KeyboardButton("⬅️ Назад"))
+    markup.add(types.KeyboardButton(" Назад"))
     
     bot.send_message(message.chat.id, f" Вибрано: *{clean_week}*.\nОбери потрібний день:", reply_markup=markup, parse_mode='Markdown')
 
-@bot.message_handler(func=lambda message: message.text == "⬅️ Назад")
+@bot.message_handler(func=lambda message: message.text == " Назад")
 def go_back(message):
     start(message)
 
@@ -67,14 +67,14 @@ def go_back(message):
 def send_today_schedule(message):
     week = user_states.get(message.chat.id)
     if not week:
-        bot.send_message(message.chat.id, "⚠️ Будь ласка, спочатку вибери тип тижня за допомогою команди /start")
+        bot.send_message(message.chat.id, " Будь ласка, спочатку вибери тип тижня за допомогою команди /start")
         return
 
     today_index = datetime.now().weekday()
     day_name = days_map[today_index]
 
     if day_name in ["Субота", "Неділя"]:
-        bot.send_message(message.chat.id, f" Сьогодні *{day_name}*, уроків немає. Відпочивай на повну! 😎", parse_mode='Markdown')
+        bot.send_message(message.chat.id, f" Сьогодні *{day_name}*, уроків немає. Відпочивай на повну! ", parse_mode='Markdown')
     else:
         text = schedule[week][day_name]
         bot.send_message(message.chat.id, f" **Розклад на сьогодні** ({day_name}, {week}):\n\n{text}", parse_mode='Markdown')
@@ -83,7 +83,7 @@ def send_today_schedule(message):
 def send_schedule(message):
     week = user_states.get(message.chat.id)
     if not week:
-        bot.send_message(message.chat.id, "⚠️ Спочатку вибери тип тижня. Напиши /start")
+        bot.send_message(message.chat.id, " Спочатку вибери тип тижня. Напиши /start")
         return
         
     day = message.text
